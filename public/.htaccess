@@ -1,0 +1,46 @@
+Options -MultiViews
+RewriteEngine On
+
+# -----------------------------------------------
+# Legacy .html → Clean URL redirects (301)
+# -----------------------------------------------
+Redirect 301 /index.html /
+Redirect 301 /loan-options.html /loan-options
+Redirect 301 /about-us.html /about-us
+Redirect 301 /our-team.html /our-team
+Redirect 301 /contact-us.html /contact-us
+Redirect 301 /fha-home-loan-miami.html /fha-home-loan-miami
+Redirect 301 /va-home-loan-miami.html /va-home-loan-miami
+Redirect 301 /usda-loan-florida.html /usda-loan-florida
+Redirect 301 /jumbo-loans-miami.html /jumbo-loans-miami
+Redirect 301 /fixed-rate-mortgage-miami.html /fixed-rate-mortgage-miami
+Redirect 301 /first-time-homebuyer-miami.html /first-time-homebuyer-miami
+Redirect 301 /investment-property-loans-miami.html /investment-property-loans-miami
+Redirect 301 /low-down-payment-mortgage.html /low-down-payment-mortgage
+Redirect 301 /mortgage-refinance-miami.html /mortgage-refinance-miami
+Redirect 301 /rehab-loan-203k.html /rehab-loan-203k
+Redirect 301 /privacy-policy.html /privacy-policy
+Redirect 301 /cookie-policy.html /cookie-policy
+Redirect 301 /ada-accessibility.html /ada-accessibility
+Redirect 301 /customer-complaint-policy.html /customer-complaint-policy
+Redirect 301 /government-disclosure.html /government-disclosure
+
+# -----------------------------------------------
+# Clean URLs: serve index.html inside folders
+# (handles /our-team, /es, /es/sobre-nosotros, etc.)
+# -----------------------------------------------
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI}/index.html -f
+RewriteRule ^(.+)/?$ /$1/index.html [L]
+
+# Fallback: serve .html extension if file exists
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI}.html -f
+RewriteRule ^(.+)$ /$1.html [L]
+
+# -----------------------------------------------
+# Custom 404
+# -----------------------------------------------
+ErrorDocument 404 /404.html
