@@ -1031,8 +1031,8 @@ body.has-ticker .contact-ticker { position: fixed; top: 0; left: 0; right: 0; z-
 .section-divider-dots::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(255,255,255,.98), rgba(255,255,255,.4) 50%, rgba(255,255,255,.98)); }
 
 /* ── LOAN CARD IMAGES ── */
-.loan-card-img { height: 190px; border-radius: var(--radius) var(--radius) 0 0; overflow: hidden; margin: -2rem -2rem 1.25rem -2rem; width: calc(100% + 4rem); }
-.loan-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+.loan-card-img { height: 220px; border-radius: var(--radius) var(--radius) 0 0; overflow: hidden; margin: -2rem -2rem 1.25rem -2rem; width: calc(100% + 4rem); }
+.loan-card-img img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; transition: transform .4s ease; }
 .loan-card:hover .loan-card-img img { transform: scale(1.06); }
 
 /* ── MOBILE: force left-align on all content text ── */
