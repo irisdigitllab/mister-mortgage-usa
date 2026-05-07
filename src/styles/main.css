@@ -264,7 +264,9 @@ body.has-ticker #navbar { top: 36px; }
 .modal-success p { color: var(--text-muted); line-height: 1.7; }
 
 /* ── LOAN INFO MODAL ── */
-.loan-info-box { max-width: 540px; }
+.loan-info-box { max-width: 580px; }
+.loan-info-img-wrap { margin: -2.5rem -2.5rem 1.5rem; overflow: hidden; border-radius: var(--radius-lg) var(--radius-lg) 0 0; height: 220px; }
+.loan-info-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .loan-info-icon-wrap { width: 64px; height: 64px; background: var(--red-light); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; }
 .loan-info-icon-wrap svg { width: 32px; height: 32px; stroke: var(--red); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .loan-info-title { font-family: 'Raleway', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--navy); margin-bottom: .75rem; line-height: 1.2; }
