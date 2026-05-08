@@ -1,0 +1,108 @@
+# ─── Mister Mortgage USA — Apache configuration for IONOS ───────────────────
+# Astro SSG static site. Generated files live in dist/ which maps to httpdocs/
+
+Options -Indexes -MultiViews
+DirectoryIndex index.html
+
+# ── HTTPS redirect ────────────────────────────────────────────────────────────
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Force HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Force non-www (adjust if client prefers www)
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ── SECURITY HEADERS ──────────────────────────────────────────────────────────
+<IfModule mod_headers.c>
+  Header always set X-Frame-Options "DENY"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-XSS-Protection "1; mode=block"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), bluetooth=()"
+  Header always set Content-Security-Policy "default-src 'none'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com https://mistermortgageusa.com https://*.tile.openstreetmap.org https://lh3.googleusercontent.com; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;"
+  # Remove server signature headers
+  Header always unset X-Powered-By
+  Header always unset Server
+</IfModule>
+
+# ── LEGACY .html → CLEAN URL REDIRECTS (301) ─────────────────────────────────
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^index\.html$                        /                                      [R=301,L]
+  RewriteRule ^loan-options\.html$                 /loan-options                          [R=301,L]
+  RewriteRule ^about-us\.html$                     /about-us                              [R=301,L]
+  RewriteRule ^our-team\.html$                     /our-team                              [R=301,L]
+  RewriteRule ^contact-us\.html$                   /contact-us                            [R=301,L]
+  RewriteRule ^fha-home-loan-miami\.html$          /fha-home-loan-miami                   [R=301,L]
+  RewriteRule ^va-home-loan-miami\.html$           /va-home-loan-miami                    [R=301,L]
+  RewriteRule ^usda-loan-florida\.html$            /usda-loan-florida                     [R=301,L]
+  RewriteRule ^jumbo-loans-miami\.html$            /jumbo-loans-miami                     [R=301,L]
+  RewriteRule ^fixed-rate-mortgage-miami\.html$    /fixed-rate-mortgage-miami             [R=301,L]
+  RewriteRule ^first-time-homebuyer-miami\.html$   /first-time-homebuyer-miami            [R=301,L]
+  RewriteRule ^investment-property-loans-miami\.html$ /investment-property-loans-miami   [R=301,L]
+  RewriteRule ^low-down-payment-mortgage\.html$    /low-down-payment-mortgage             [R=301,L]
+  RewriteRule ^mortgage-refinance-miami\.html$     /mortgage-refinance-miami              [R=301,L]
+  RewriteRule ^rehab-loan-203k\.html$              /rehab-loan-203k                       [R=301,L]
+  RewriteRule ^privacy-policy\.html$               /privacy-policy                        [R=301,L]
+  RewriteRule ^cookie-policy\.html$                /cookie-policy                         [R=301,L]
+  RewriteRule ^ada-accessibility\.html$            /ada-accessibility                     [R=301,L]
+  RewriteRule ^customer-complaint-policy\.html$    /customer-complaint-policy             [R=301,L]
+  RewriteRule ^government-disclosure\.html$        /government-disclosure                 [R=301,L]
+</IfModule>
+
+# ── WORDPRESS LEGACY REDIRECT (if old WP URLs still get traffic) ──────────────
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Redirect WP admin attempts
+  RewriteRule ^wp-admin/?(.*)$    /                [R=301,L]
+  RewriteRule ^wp-login\.php$     /                [R=301,L]
+  RewriteRule ^wp-content/(.*)$   /                [R=301,L]
+</IfModule>
+
+# ── CACHING ───────────────────────────────────────────────────────────────────
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # Images — 1 year
+  ExpiresByType image/jpeg        "access plus 1 year"
+  ExpiresByType image/png         "access plus 1 year"
+  ExpiresByType image/webp        "access plus 1 year"
+  ExpiresByType image/svg+xml     "access plus 1 year"
+  ExpiresByType image/gif         "access plus 1 year"
+  ExpiresByType image/x-icon      "access plus 1 year"
+  # Fonts — 1 year
+  ExpiresByType font/woff2        "access plus 1 year"
+  ExpiresByType font/woff         "access plus 1 year"
+  # CSS/JS — 1 day
+  ExpiresByType text/css          "access plus 1 day"
+  ExpiresByType application/javascript "access plus 1 day"
+  # HTML — no cache
+  ExpiresByType text/html         "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(jpg|jpeg|png|webp|svg|gif|ico|woff2|woff)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=86400"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ── GZIP COMPRESSION ──────────────────────────────────────────────────────────
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript
+  AddOutputFilterByType DEFLATE application/json text/xml image/svg+xml
+  AddOutputFilterByType DEFLATE font/woff2 font/woff
+</IfModule>
+
+# ── ERROR PAGES ───────────────────────────────────────────────────────────────
+ErrorDocument 404 /404.html
